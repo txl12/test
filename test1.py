@@ -16,6 +16,7 @@ class my_system1:
                 self.__sex.append(key["information"]["gender"])
                 self.__name.append(key["information"]["name"])
     def judgeroom(self,room_num,gender="男",judgeroom_full=False,judgesex=False,judgeroom_notnone=False):#判断房间范围，性别，是否为空等，不同功能由三个bool变量决定
+        #解决新增不在范围内寝室问题，需要修改规则等，可以只修改这个函数
         if room_num.isnumeric() and (int(room_num) in range(100,300)) :
             if (gender =="男" or gender=="女"):
                 if (int(room_num) in range(100,200) and (gender =="男" or (not judgesex)))or(int (room_num)in range(200,300) and (gender =="女"or (not judgesex))):
@@ -71,8 +72,7 @@ class my_system1:
         else:
             print("错误的学号:"+study_num)
         return False
-    def print_stu(self,study_num,information):#通过不同命令打印不同信息
-        index=self.getstudent(study_num)
+    def print_stu(self,index,information):#通过不同命令打印不同信息
         string=""
         if "姓名" in information or "全部信息" in information:
             string="姓名:"+self.__name[index]
@@ -139,6 +139,7 @@ def main():
         print("||4:打印所有学生信息             ||")
         print("||5:调整寝室                     ||")
         print("||6:保存并退出程序               ||")
+        print("||7:不保存退出程序               ||")
         print("==================================")
         cmd=input("请输入命令：")
         if cmd =="1":
@@ -183,14 +184,14 @@ def main():
             while True: 
                 print_stu_num=input("请输入学号：")
                 try:
-                    a.getstudent(print_stu_num)
+                    index=a.getstudent(print_stu_num)
                     print("||姓名         ||")
                     print("||寝室         ||")
                     print("||性别         ||")
                     print("||年龄         ||")
                     print("||全部信息     ||")
                     print_choice_num=input("请输入想打印的信息：")
-                    a.print_stu(print_stu_num,print_choice_num)
+                    a.print_stu(index,print_choice_num)
                     break
                 except:
                     print("该学号%s没有信息,请输入正确的学号"%print_stu_num)
@@ -220,6 +221,9 @@ def main():
         elif cmd=="6":
             print("||6:保存并退出程序               ||")
             a.save_json()
+            break
+        elif cmd=="7":
+            print("||7:不保存退出程序               ||")
             break
         else:
             print("错误的命令，请重新输入")
